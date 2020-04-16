@@ -1,0 +1,440 @@
+ 
+ 
+ 
+# CA
+# Group x
+# Eoin McLoughlin
+# Robin O’Shea
+ 
+# Functional Specification
+
+# Table of Contents
+**1. Introduction** 
+1.1 Overview…………………………………………..……………….………..3,4 
+1.2 Business Context……………………………….…………….………………4 
+1.3 Glossary………………………….………………………………..………....….4,5 
+
+**2. General Description** 
+2.1 Product/System Functions….……………………………………….…....…5,6
+2.2 User Characteristics…………….…………….……...…………..….………...6 
+2.3 Operational Scenarios…………...…………..…………….…..……….7,8,9,10 
+2.4 Constraints………...…………………..……………………………......……11
+
+**3. Functional Requirements**
+3.1 Establishing map of DCU……………………………………………….…...13 
+3.2 Establishing user location and translating that to our 3d model…………..…14 
+3.3 Finding a users goal location within campus…………….…………..………15 
+3.4 Creating a user specific calendar…………………………………..…….......16 
+3.5 Being notified of events in real time…………………………...……....…….17 
+3.6 Display academic timetable withing calendar…………....………………….18
+3.7 Display bus timetables………….………………………………...……….....19
+3.8 Import exam timetables………………………………………………..……..20
+
+**4. System Architecture**
+4.1 System Architecture Diagram……………..……..……………..…….…..22,23
+
+**5. High-level design** 
+5.1 High-Level Class Diagram……………………….….……………………....24 
+5.2 High Level Design walkthrough…………………….……………………….25 
+5.3 Data flow Diagram…………………………………...……..………..………26 
+
+**6. Preliminary Schedule**
+6.1 Gantt Chart……………………………………………….……………………….....27 
+
+
+
+
+
+# 1.    Introduction 
+
+**1.1 	Overview**
+Our intended system is a phone-based scheduling application which will largely accommodate the life of a DCU student. The application will contain a 3D mapping of the DCU Glasnevin campus, giving the user a fully interactive experience. The mapping will contain all relevant points of interest within the DCU campus as well as be able to show the users current location within the campus in relation to these points. The application will allow the user to input their student timetable by entering their programme code and academic year and will web scrape all relevant information for that programme from the DCU timetables website.  Once completed, the user will be notified of all their classes for the upcoming week in real-time. Upon being notified, the user will then be presented with the option of seeing the quickest route to their upcoming class, taking into account floor level and perspective, from their current location. The current most informative way of seeing the layout of the campus is paper based and by introducing this product to the market we hope to capitalize on its potential use during the academic year. Due to urban sprawl DCU has been forced to build up creating an intricate network of rooms and corridors. Our applications main goal is to alleviate the stress of traversing this network.
+ 
+This application is designed for students and visitors who may be unfamiliar with the DCU Glasnevin campus. The application will also implement a quick find feature to process individual geolocation requests from users.  The application will contain a calendar for DCU related events that pertain to each user, who will be able to go in and edit these events accordingly. The application will also be able to show the schedules for the various bus stops around the DCU campus, specifically at the Helix and to the right of the Ballymun Road entrance as these are frequently used by DCU students. This will also be done by web scraping data from the Dublin bus real-time website.
+
+**1.2 	Business Context**
+We believe there will be a high demand for this product by DCU students, especially at the start of the academic year by incoming first year students, foreign exchange students and then throughout the year through tourists and visitors to the campus. There are two possible routes we can explore in relation to his product:
+
+ * Selling the application:
+Given the application is made will be made with DCU in mind, one avenue we could explore would be to sell the application to DCU once finished.
+ 
+ 
+ * Advertisements:
+The application could also be used by businesses looking to cater to students as this is the large majority of people who will be using it. Whether this be displaying potential student orientated nights out in the students events calendar or displaying a brand advertising on campus as a point of interest within the DCU, there are numerous ways to attract businesses to pay for advertising.
+ 
+ 
+**1.3 	Glossary:**
+
+**Unity:**
+Unity Game Engine is a software framework designed for game development .You can use Unity to build high-quality 3D applications, and export them across mobile, desktop
+**MapBox:**
+Mapbox is a open street map data platform for mobile and web applications. That allows for users to filter or customize of their own  map preferences, save them as something called a “style” and share or in our case import into unity game engine with our mapbox sdk
+**SDK:** Software Development Kit
+**POI:** Point of Interest
+	
+	
+# 2.    General Description
+
+**2.1 	Product / System Functions:**
+We initially intend to design our application for android devices with the aim of porting it to ios at a later date. The user will download the application from the google Play store. Below is an initial list of functions we plan to create to implement the core functionality of our project:
+ 
+* **create_profile()**
+Stores an instance of a persons selected timetable and academic year
+* **get_schedule()**
+Retrieves a person’s schedule from the DCU timetables website
+* **display_schedule()**
+Displays a user’s schedule for the week, this will be available in the user interface
+* **quick_find()**
+Displays the fastest route to a particular room of user input.
+* **find_next_class()**
+Finds the next instance of a class from the current time onwards and displays it
+* **find_building()**
+Using the find next class function, it directs the user to the building the next class is in.
+* **find_room()**
+Directs the user to the room within the building from find_building()  taking the rooms floor number into account.
+* **add_event()**
+Creates a new event within the calendar feature.
+* **get_bus_times()**
+Returns the timetables for the bus stops around the DCU campus
+ 
+This list covers the basic functionality of our intended system however these are all preliminary names of functions may change during the course of developing the project.
+
+**2.2 	User Characteristics**
+As it is our goal to have our application downloadable for both Android and ios, any smart device would be able to make use of it granted we are able to position the user within the DCU campus. It is our belief that DCU students, in particular new students, will be the overwhelming majority of people downloading and using the application. As a result of this it is vital that we place an emphasis on catering to their specific needs, hence implementing features other than just a schedule to ensure the longevity of the applications usage.
+Administrators for the application will have more power and freedom than that regular users. They will be able to edit the map to display potential new points of interest or display potential events that could be of interest to the user, these both mainly for marketing purposes.
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+**2.3 	Operational Scenarios**
+	**Creating an account:**
+After downloading the application the user will be asked would they like to sync their timetable so that their class scheduling can be established. They will be asked to input their program code and academic year. If they are unable to provide this information at this current time then they are able to skip this process and proceed to the homepage of the application. They will then be asked for access to their location but only within the confines of the DCU campus. The ability to sync your academic calendar will always be an available option in the calendar pull out menu if they would like to sync their timetable at a later date.
+
+
+**Using the navigation feature:**
+This feature will be utilised by the user for either the quick find feature or as part of their weekly schedule. The user will be shown their current location as well as their goal location in the home screen. A coloured connect the two displaying the users best route to get between the two. The users location will be tracked through the campus as they follow this line which ends at the entrance to the building that the room is contained in. upon arriving at the room a prompt will appear asking would they like to see a mapping of the inside of the building to help them find their room of choice. If the user responds “Yes”, a 2D map of the floor plan will appear of the building. In the case that the room is not on the first floor the user will be directed to the closest set of stairs / elevator depending on if they have a preference at which point a map of the appropriate floor level will open displaying the route to their appropriate room. The user is also able to close the navigation aid at any point if they feel they no longer need it.
+
+![](functional_spec/Functional spec images/interface_mock_up.png)
+
+
+**Quick finding a room:**
+The main home screen of the application will be the users current location on the DCU campus. It will have three options at the bottom of the page, one to access their calendar, one to check bus times and another to implement the quick find feature. This feature can be used to find a building or room within a building. The user simply enters where they would like to go and the program will return a coloured line indicating the best route from the user's current location to the goal location.
+
+**Adding a new event to the calendar:**
+To add an event to their calendar, the user clicks on the “Calendar” option on the home screen of the page. A drop down screen will open containing the days of the month at the top of the screen as well as the currents days list of events being scrollable underneath. The calendar is always set to the current day.  At the bottom of the screen the user will once again have three options, “Add event,” “Remove Event,” and “Settings,” where they can review their inputted details. The user presses which day of the month they would like to add an event on in the calendar and then presses the add event button at the bottom of the page, they will then be asked for the time of the event and and have the option to add a description if they would like. The event is then added to the day and saved into memory.
+![]{functional_spec/Functional spec images/Calendar_interface.png)
+**Removing an event from the calendar:**
+Similar to adding an event, the user opens the calendar feature at the bottom of the home screen which opens the calendar. The user then opens the correct date that the event is on and presses the “Remov event” command. They then scroll down to the event and press it highlighting it. They will be able to highlight and subsequently remove more than one event at any time. When all events have been highlighted the user presses the bin icon which will remove all selected events from that day. 
+
+**Checking bus times:**
+To check bus times for busses located around the DCU campus, the user presses the “Transport” button at the bottom right hand corner of the home screen. A window will then open asking them which bus stop they would like to see real-time information for either the bus stop to the right of the Ballymun road entrance, the bus stop at the helix, or the bus stop just outside the Collins Avenue entrance. After making their selection they will then be shown the current real-time bus schedule.
+
+**Find shared users:**
+As a final feature we plant to implement the ability to make your location known within the grounds of the DCU.  A users location may only be shared with people of their choosing and there is no obligation to share your location. We also will not be keeping track of users locations outside of the DCU campus and their location will only be displayed while using the application
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**2.4 	Constraints**
+**Usability constraints:**
+We plan to have our applications cater for all students. To do this we plan to implement vocal directional commands for navigating campus as well as looking into text to speech options for those who may be visually impaired.
+  
+**Location constraints:**
+The application will only display the user’s location if they are within the DCU Glasnevin campus. In association to this, the user will only be able to be directed to their next class once they are within the DCU campus.
+ 
+**Time constraints:**
+As we plan to implement multiple features to accommodate students we will have to be mindful of the time we have. We plan to build the core idea of the application first and then expand functionality as time progresses. A good way of keeping on top of this is with a schedule which we plan to implement.
+ 
+**Mapping constraints:**
+We plan to implement mapping for every floor of every building within the DCU campus, our first option of going about this is to try get access to the blueprints for each building from DCU. This will make mapping the campus three dimensionally much easier. If we are unable to acquire we will have to create our own measurements for each floor plan which will take longer but is still doable.
+
+**User constraints:**
+As there is no attainable way of acquiring users location accurately within a building we plan to implement directional paths from all entrances of the building to their designated room after the floorplan of the building has been established. We will have to rely on the user to follow these directions accordingly and provide an interface to interact with to see whether they are making their way throughout the building in the correctly.
+# 3. Functional Requirements
+**3.1	Establishing the map of DCU:**
+
+**Description:**
+The map we build to represent the DCU campus must be of a high standard and of scale to the actual campus to ensure usability and ease unfamiliarity with the application. The model must be of scale in terms of scale and aspect for both outdoor 3D model as well as for the 2D floor plans we plan to implement. 
+
+**Critically:**
+This feature is critical to our applications success. The 3D model is the basis on which we plan to build many of our other features and must be working perfectly and of a high quality in order to do so. Without the map, we would not be able to direct students anywhere which is the fundamental concept of our project.
+
+**Technical issues:**
+We are able to use the MapBox SDK which contains vast amounts of real world metadata to compute information, the main challenge in accomplishing this is to build a model that is able to translate that into a 3 dimensional setting. After this has been completed, the main aim will be to build the model of the campus to a very high standard to ensure its similarity to the real world version.
+
+**Dependencies with other requirements:**
+This model will act as an interface to the user displaying their current location as well as their goal location and points of interest. It will also display the directions between these two other features which are critical to our applications overall success.
+
+
+
+**3.2	Establishing user location and translating that to our 3d model**
+
+**Description:**
+We plan to track the users location within the confines of the DCU campus in order to be able to direct them to their specific goals at any point of them being on campus. Their current position on the campus will be displayed within the 3D model we have discussed above and must be tracked with high accuracy in order to provide correct directions.
+
+**Critically:**
+This is a vital feature in the development of our application. We can only direct people where to go if we first know where they are. Without this, the whole concept of navigating the campus is impossible. Without their current location and desired location, we won't be able to formulate the best route for them to take in order to reach their intended goal.
+
+**Technical issues:**
+Users location will be updated regularly throughout use, our obstacles to be surpassed will be limiting our map to the DCU campus from our imported mapbox style created and implementing our user object behaviours such as positioning in the form of latitude and longitude which is retrieved by the users phone which will be instanced in C# with UnityEngine and will will be mapped in respect to coordinates within our DCU map.
+
+**Dependencies with other requirements:**
+For us to be able to accomodate for users location and displaying it where we would like it to, we need a canvas that has mapping tools like navigation, providing a longitude and latitude for a desired position.This is why we chose to use the mapbox sdk because as a conclusion we can attach users location to our map which will move to their location on the map   
+
+**3.3	Finding a users goal location within the campus:**
+
+**Description:**
+This along with the two functional requirements mentioned above will help complete the core functionality of our application, which is to help users navigate the DCU campus. As well as being able to locate POI’s, we also allow to enter a room code for where they would like to find. The applications breaks this room code down to establish which building they would like to go to, then what floor of that building, and finally what room on that floor.
+
+**Critically:**
+This element is critical to our application as it provides key functionality for both implementing a weekly academic schedule and for using the “Quick find” feature we plan to implement.
+
+**Technical issues:**
+Each building within the campus will contain a number of rooms within it. Once the user requests a destination the first letter of the room code is checked to determine which building it is in. then within that building we will search our list of all mapped rooms to see if the desired room exists within that building.
+
+**Dependencies with other requirements:**
+To reach a goal location, the application will rely on a combination of both the users current location, where trackable, as well as user input. We plan to anticipate losing gps signal from the user within larger buildings and to combat we plan to provide directions based off of user feedback, such as only opening a floor plan for the second floor of a building once the user has indicated that they have reached the stairs.
+
+
+
+**3.4	Creating a user specific calendar:**
+
+**Description:**
+This user unique calendar will allow every user to personally plan out their day. Upon user request it can display their weekly academic timetable as well as add or remove any events that the user may wish.
+
+**Critically:**
+This will account for another aspect of student life and our intent is to provide students with an easy way to plan their upcoming days and weeks to help reduce some of the stress associated with college life. This would be are second most heavily explored feature as we see a lot of potential for popularity and use in it.
+
+**Technical issues:**
+Each instance of a calendar will have to be unique to each user. Each calendar should be able to display events as well as add new events or remove events that are no longer wanted.
+
+**Dependencies with other requirements:**
+Specific elements of the calendar will be decided by user input. As well as this, the user will also have the option to import their weekly class schedule into the calendar which will be done using web scraping The user will then become notified of theses events in chronological order
+
+
+
+
+
+
+
+
+**3.5	Being notified of events in real time:**
+
+**Description:**
+After a working calendar has been established, we then need to be able to translate the user inputted times and dates into real time. This will, give the user advanced notice of upcoming events and if the event is taking place within DCU, they will be offered directions to that event.
+
+**Critically:**
+This feature needs the ability to store, display and remove events from a personalised calendar specific to each user. This is a very important aspect of our project and will greatly increase the potential long term usability of our application.
+
+**Technical issues:**
+We plan to use real time data to compare module times against current times 
+We want to make sure our calendar is read from a dictionary with a key being the day and our value being a list of elements of modules occuring on that day whilst passing through our list of that day we must always monitor the times against real time and notify the user of imminent lectures 
+
+**Dependencies with other requirements:**
+Being able to display notifications in chronological will share information with the user specific calendar as well as pass information to a user’s goal location if they require directions. This will also then be displayed on the DCU map.
+
+
+
+
+
+
+**3.6	Display academic timetable within calendar:**
+
+**Description:**
+This is an option available to every user granted they are currently studying in DCU. We will ask the user to input their programme code and current academic year. We will then use web scraping to import all relevant information about their timetable into an instance of their calendar which will then display it every week 
+
+
+
+**Critically:**
+This feature needs the ability to store, display and remove events from a personalised calendar specific to each user. This is a very important aspect of our project and will greatly increase the potential long term usability of our application.
+
+**Technical issues:**
+For this aspect of the project we will have will have to gain a deeper understanding of web scraping than we currently do in order to correctly import all relevant information from a students weekly timetable.
+
+
+**Dependencies with other requirements:**
+An imported students weekly timetable will be passed into a students calendar for every academic week. We will then have to manage how to correctly combine this timetable with events that have been added potentially in between classes and then display all of these events in a chronological order within the calendar.
+
+
+
+
+**3.7	Display Bus timetables:**
+
+**Description:**
+This will be available to all users whether they are a student in DCU or not. It will retrieve the current real time schedule for dublin bus stops situated around the campus, specifically to the right hand side of the ballymun entrance, at the helix and outside the Collins Avenue entrance.
+
+**Critically:**
+This needs to retrieve information from the appropriate stops with high accuracy. A delay in relaying information could mean users missing their desired busses which leads to dissatisfaction with our applications capabilities
+
+**Technical issues:**
+To display bus timetables, this will be done by issuing queries to the Dublin Bus real time server. We will then have to take only the relevant information and display it to the user in a simplistic and informative fashion as possible.
+
+**Dependencies with other requirements:**
+This will mainly rely on user input to determine which bus stop they wish to view realtime information for as well as the Dublin Bus server issuing the correct information.
+
+
+
+
+
+
+
+
+
+**3.8	Find Friends:**
+
+**Description:**
+We would also like to implement a feature whereby a user is able to share their location within the DCU campus with other users of their choice.
+
+**Critically:**
+This is purely as an additional feature and is not critical to the system but one which we believe will help increase the applications usage rate and lifespan. This will also help boost the interface in terms of aesthetic appeal and hopefully will encourage the user to spend more time using the application. 
+
+**Technical issues:**
+Because of our ability to track a user's location, we would be able to implement a “last seen” feature where the last location of a user using the application within the DCU campus is displayed. Each users location will only be shown to other users that the user has granted permission to.
+
+**Dependencies with other requirements:**
+This feature will take attributes from the users location within the campus as well as displaying them within our 3D model of the campus themselves. Due to a combination of potentially being unable to track a user within a building and to keep some form of privacy we wont show where users are within building exactly, only that they are in a specific building.
+
+
+
+
+
+
+
+
+**3.9	Import exam timetables:**
+
+**Description:**
+As exam season gets closer we plan to import a students exam timetable for their particular programme of study into their calendar. This feature will only become available twice during the year and because of which we have considered it a lower priority.
+
+**Critically:**
+While only available twice a year, this will allow students to view when their exams are scheduled for as well as providing their seat number etc and will provide even more longevity to the applications potential usability.
+
+**Technical issues:**
+To incorporate a students exam timetable, we will once again be using web scraping from the DCU exam timetables website. Having retrieved all relevant information we then must translate this information to appropriate dates and times within the calendar of our application.
+
+**Dependencies with other requirements:**
+The exam timetable will rely on our ability to scrape all appropriate data from the exam timetables website. It is also reliant on being display correctly within the calendar and be highlighted as important as the consequences of missing a exam are much more serious than other events.
+
+
+
+
+
+# 4. 	System Architecture :
+
+**4.1	System Architecture Diagram**
+![](functional_spec/Functional spec images/System_Architecture_Diagram.jpg)
+
+ 
+**Description:**
+The above diagram indicates the process of the application. These are the main integral parts followed by their own attributes or aftermath’s.The student who is using the application as a result has its own location limited to the span of DCU campus, The student timetable which integrates with each individual student and the goal location to where the student must be
+
+
+**Student Timetable:**
+The student once the application is opened on first use is prompted for his/her own timetable of academic, they are provided to the link from DCU website as to where to find their table, once the table has been found it is submitted and displayed for the student as to their upcoming lectures and their corresponding times.The most imminent lecture is highlighted and waypointed  for users current location and the building to where the class is situated
+ 
+**Goal Destination:**
+The goal destination is what the user is interested in understanding where the location of is.This can be imminent lectures which will automatically be indicated to the user but also by optional selection of buildings through dcu campus interface
+ 
+**Building map Design:**
+Once the user has reached his/her destination, the user can then view a further map of the inside of the building. Which won’t account for user location but rather a road created from entrances of the building to the room to which the lecure is taking place  
+ 
+**Student:**
+The student using the application is classified as a student but he/she does not have to be as the programme is applicable to all audiences for facilitating to their needs as aforementioned, The user once downloaded the application will have queried before interacting with the interface which is if a student or not, if so the student can utilize the student timetable feature, otherwise the user can begin using the application straight away
+
+**User location:**
+User’s location is iterated through the the users phone and only displays within DCU campus.
+
+# 5. 	High-Level Design :
+
+**5.1	High level class diagram**
+
+
+![](functional_spec/Functional spec images/class_higher_level_diagram.jpg)
+
+
+
+
+**5.2 	High-Level Design Walkthrough**
+
+**Step 1:**
+Register for use of application, a simple option of being or not being a student for facilitating students timetable with user. which is broken down into two subsections of users student and non student
+ 
+**Step 1 (I): (Student)** 
+Timetable is submitted following directions prescribed and is now ready to use application and have the ability to be notified of lectures
+ 
+**Step 1 (II): (Student)**
+The users timetable is read along with their associated starting times compared in real-time. The most imminent lecture is notified to the user alongside its building name and room number
+ 
+**Step 2:** 
+The user’s location is accessed via their phone
+ 
+**Step 3:**
+Map of entire DCU campus is shown and the users actual location within DCU
+  
+**Step 4:** 
+Destination of where the user would like to be in terms of building is highlighted in contrast to other building
+ 
+**Step 5:**
+A waypoint is created from the users current positioning to their destination in the shortest path possible
+
+
+**Step 6:**
+Once the building is reached a further map is displayed of the inside and a further waypoint is created to the room
+
+**5.3	Data flow diagram**
+![](functional_spec/Functional spec images/func_spec_dfd.jpg)
+Data Flow Diagram Here we provide the data flow of the system ,showing  the functionality of the system. Using entities their associated processes and data storage points 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 6. 	Preliminary Schedule:
+
+This subject provides the project plan through the use of a Gantt chart.Showing  our current progress and future objectives towards our final product using a date calendar. Some of these might change during the course of the project as we may experience unexpected problems.
+
+
+
+**6.1 Gantt Chart**
+.   
+  ![](functional_spec/Functional spec images/GANTT.PNG) 
+  ![](functional_spec/Functional spec images/GANTT_FULL_PIC.PNG)
+
+
